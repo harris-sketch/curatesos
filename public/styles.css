@@ -46,10 +46,20 @@ a {
 
 .topbar {
   align-items: center;
+  backdrop-filter: blur(18px);
+  background: rgba(7, 17, 31, 0.78);
+  border: 1px solid var(--line);
+  border-radius: 22px;
   display: flex;
   justify-content: space-between;
+  left: clamp(20px, 5vw, 72px);
   margin: 0 auto;
   max-width: 1180px;
+  padding: 10px 14px;
+  position: fixed;
+  right: clamp(20px, 5vw, 72px);
+  top: 18px;
+  z-index: 50;
 }
 
 .brand {
@@ -89,7 +99,7 @@ a {
   display: grid;
   gap: 44px;
   grid-template-columns: minmax(0, 1.1fr) minmax(360px, 0.9fr);
-  margin: 70px auto 54px;
+  margin: 116px auto 54px;
   max-width: 1180px;
 }
 
@@ -149,6 +159,25 @@ a {
   border: 1px solid var(--line);
   border-radius: 28px;
   box-shadow: var(--shadow);
+}
+
+.module-grid article,
+.control-list div,
+.roadmap-grid article,
+.timeline li {
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
+}
+
+.module-grid article:hover,
+.control-list div:hover,
+.roadmap-grid article:hover,
+.timeline li:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(212, 169, 79, 0.4);
+  transform: translateY(-2px);
 }
 
 .command-panel {
@@ -330,11 +359,16 @@ a {
   width: 42px;
 }
 
-.module-grid,
-.roadmap-grid {
+.module-grid {
   display: grid;
   gap: 18px;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.roadmap-grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .module-grid article,
@@ -372,6 +406,7 @@ a {
 }
 
 .roadmap {
+  padding-bottom: 96px;
   padding-top: 24px;
 }
 
@@ -382,6 +417,26 @@ a {
   font-weight: 900;
   letter-spacing: 0.14em;
   margin-bottom: 16px;
+}
+
+.footer {
+  align-items: center;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto;
+  max-width: 1180px;
+  padding: 34px clamp(20px, 5vw, 72px) 44px;
+}
+
+.footer p {
+  margin: 10px 0 0;
+}
+
+.footer a:last-child {
+  color: var(--gold);
+  font-weight: 800;
 }
 
 @media (max-width: 980px) {
@@ -408,8 +463,21 @@ a {
     grid-template-columns: 1fr;
   }
 
+  .topbar {
+    left: 12px;
+    right: 12px;
+  }
+
   .hero,
   .section {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .footer {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 20px;
     padding-left: 16px;
     padding-right: 16px;
   }
