@@ -1,0 +1,15 @@
+{
+  "name": "curatesos-netlify-dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Institutional-quality business dashboard for Netlify operations and internal tooling.",
+  "scripts": {
+    "dev": "netlify dev --dir public",
+    "check": "node --check netlify/functions/netlify-dashboard.mjs && node --check public/app.js && node scripts/validate-dashboard.mjs",
+    "build": "npm run check"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

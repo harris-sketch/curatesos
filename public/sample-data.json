@@ -1,0 +1,395 @@
+{
+  "generatedAt": "2026-05-11T01:04:00.000Z",
+  "source": "sample",
+  "account": {
+    "slug": "curatesos",
+    "siteFilterConfigured": true
+  },
+  "filters": {
+    "siteLimit": 24,
+    "detailLimit": 8
+  },
+  "metrics": {
+    "sitesMonitored": 6,
+    "activeForms": 18,
+    "deploySuccessRate": 92,
+    "latestDeployHealth": 83,
+    "failedDeploys": 1,
+    "averageDeploySeconds": 94,
+    "connectedTools": 4
+  },
+  "connections": [
+    {
+      "name": "Netlify Sites",
+      "status": "connected",
+      "detail": "6 sites in scope"
+    },
+    {
+      "name": "Deploy Pipeline",
+      "status": "connected",
+      "detail": "Recent deploy telemetry is available"
+    },
+    {
+      "name": "Forms Intake",
+      "status": "connected",
+      "detail": "Form inventory is included"
+    },
+    {
+      "name": "Source Control",
+      "status": "connected",
+      "detail": "Repository links detected for production sites"
+    }
+  ],
+  "sites": [
+    {
+      "id": "site-001",
+      "name": "curatesos-primary",
+      "accountName": "CurateSOS",
+      "adminUrl": "https://app.netlify.com/sites/curatesos-primary/overview",
+      "url": "https://curatesos.com",
+      "customDomain": "curatesos.com",
+      "repoUrl": "https://github.com/curatesos/web",
+      "branch": "main",
+      "createdAt": "2025-08-13T18:15:00.000Z",
+      "updatedAt": "2026-05-10T23:41:00.000Z",
+      "state": "current",
+      "deploysAvailable": true,
+      "formsAvailable": true,
+      "activeForms": 4,
+      "latestDeploy": {
+        "id": "deploy-001",
+        "state": "ready",
+        "title": "Homepage trust refresh",
+        "branch": "main",
+        "context": "production",
+        "deployUrl": "https://curatesos.com",
+        "adminUrl": "https://app.netlify.com/sites/curatesos-primary/deploys/deploy-001",
+        "createdAt": "2026-05-10T23:35:00.000Z",
+        "publishedAt": "2026-05-10T23:37:00.000Z",
+        "updatedAt": "2026-05-10T23:37:00.000Z",
+        "durationSeconds": 118
+      },
+      "deploys": [
+        {
+          "id": "deploy-001",
+          "state": "ready",
+          "title": "Homepage trust refresh",
+          "branch": "main",
+          "context": "production",
+          "deployUrl": "https://curatesos.com",
+          "adminUrl": "https://app.netlify.com/sites/curatesos-primary/deploys/deploy-001",
+          "createdAt": "2026-05-10T23:35:00.000Z",
+          "publishedAt": "2026-05-10T23:37:00.000Z",
+          "updatedAt": "2026-05-10T23:37:00.000Z",
+          "durationSeconds": 118
+        }
+      ]
+    },
+    {
+      "id": "site-002",
+      "name": "operator-portal",
+      "accountName": "CurateSOS",
+      "adminUrl": "https://app.netlify.com/sites/operator-portal/overview",
+      "url": "https://ops.curatesos.com",
+      "customDomain": "ops.curatesos.com",
+      "repoUrl": "https://github.com/curatesos/operator-portal",
+      "branch": "main",
+      "createdAt": "2025-10-05T14:30:00.000Z",
+      "updatedAt": "2026-05-10T22:15:00.000Z",
+      "state": "current",
+      "deploysAvailable": true,
+      "formsAvailable": true,
+      "activeForms": 2,
+      "latestDeploy": {
+        "id": "deploy-002",
+        "state": "ready",
+        "title": "Dispatch queue tune-up",
+        "branch": "main",
+        "context": "production",
+        "deployUrl": "https://ops.curatesos.com",
+        "adminUrl": "https://app.netlify.com/sites/operator-portal/deploys/deploy-002",
+        "createdAt": "2026-05-10T22:10:00.000Z",
+        "publishedAt": "2026-05-10T22:11:00.000Z",
+        "updatedAt": "2026-05-10T22:11:00.000Z",
+        "durationSeconds": 78
+      },
+      "deploys": [
+        {
+          "id": "deploy-002",
+          "state": "ready",
+          "title": "Dispatch queue tune-up",
+          "branch": "main",
+          "context": "production",
+          "deployUrl": "https://ops.curatesos.com",
+          "adminUrl": "https://app.netlify.com/sites/operator-portal/deploys/deploy-002",
+          "createdAt": "2026-05-10T22:10:00.000Z",
+          "publishedAt": "2026-05-10T22:11:00.000Z",
+          "updatedAt": "2026-05-10T22:11:00.000Z",
+          "durationSeconds": 78
+        }
+      ]
+    },
+    {
+      "id": "site-003",
+      "name": "partner-intake",
+      "accountName": "CurateSOS",
+      "adminUrl": "https://app.netlify.com/sites/partner-intake/overview",
+      "url": "https://partners.curatesos.com",
+      "customDomain": "partners.curatesos.com",
+      "repoUrl": "https://github.com/curatesos/partner-intake",
+      "branch": "main",
+      "createdAt": "2025-11-21T09:22:00.000Z",
+      "updatedAt": "2026-05-10T21:04:00.000Z",
+      "state": "current",
+      "deploysAvailable": true,
+      "formsAvailable": true,
+      "activeForms": 7,
+      "latestDeploy": {
+        "id": "deploy-003",
+        "state": "error",
+        "title": "CRM routing rules",
+        "branch": "main",
+        "context": "production",
+        "deployUrl": "https://partners.curatesos.com",
+        "adminUrl": "https://app.netlify.com/sites/partner-intake/deploys/deploy-003",
+        "createdAt": "2026-05-10T21:01:00.000Z",
+        "publishedAt": null,
+        "updatedAt": "2026-05-10T21:04:00.000Z",
+        "durationSeconds": 181,
+        "errorMessage": "Build command exited with non-zero status"
+      },
+      "deploys": [
+        {
+          "id": "deploy-003",
+          "state": "error",
+          "title": "CRM routing rules",
+          "branch": "main",
+          "context": "production",
+          "deployUrl": "https://partners.curatesos.com",
+          "adminUrl": "https://app.netlify.com/sites/partner-intake/deploys/deploy-003",
+          "createdAt": "2026-05-10T21:01:00.000Z",
+          "publishedAt": null,
+          "updatedAt": "2026-05-10T21:04:00.000Z",
+          "durationSeconds": 181,
+          "errorMessage": "Build command exited with non-zero status"
+        }
+      ]
+    },
+    {
+      "id": "site-004",
+      "name": "executive-briefing",
+      "accountName": "CurateSOS",
+      "adminUrl": "https://app.netlify.com/sites/executive-briefing/overview",
+      "url": "https://briefing.curatesos.com",
+      "customDomain": "briefing.curatesos.com",
+      "repoUrl": "https://github.com/curatesos/briefing",
+      "branch": "main",
+      "createdAt": "2026-01-08T17:45:00.000Z",
+      "updatedAt": "2026-05-09T17:12:00.000Z",
+      "state": "current",
+      "deploysAvailable": true,
+      "formsAvailable": true,
+      "activeForms": 1,
+      "latestDeploy": {
+        "id": "deploy-004",
+        "state": "ready",
+        "title": "Investor metrics view",
+        "branch": "main",
+        "context": "production",
+        "deployUrl": "https://briefing.curatesos.com",
+        "adminUrl": "https://app.netlify.com/sites/executive-briefing/deploys/deploy-004",
+        "createdAt": "2026-05-09T17:07:00.000Z",
+        "publishedAt": "2026-05-09T17:09:00.000Z",
+        "updatedAt": "2026-05-09T17:09:00.000Z",
+        "durationSeconds": 132
+      },
+      "deploys": [
+        {
+          "id": "deploy-004",
+          "state": "ready",
+          "title": "Investor metrics view",
+          "branch": "main",
+          "context": "production",
+          "deployUrl": "https://briefing.curatesos.com",
+          "adminUrl": "https://app.netlify.com/sites/executive-briefing/deploys/deploy-004",
+          "createdAt": "2026-05-09T17:07:00.000Z",
+          "publishedAt": "2026-05-09T17:09:00.000Z",
+          "updatedAt": "2026-05-09T17:09:00.000Z",
+          "durationSeconds": 132
+        }
+      ]
+    },
+    {
+      "id": "site-005",
+      "name": "status-room",
+      "accountName": "CurateSOS",
+      "adminUrl": "https://app.netlify.com/sites/status-room/overview",
+      "url": "https://status.curatesos.com",
+      "customDomain": "status.curatesos.com",
+      "repoUrl": "https://github.com/curatesos/status-room",
+      "branch": "main",
+      "createdAt": "2026-02-11T12:10:00.000Z",
+      "updatedAt": "2026-05-08T13:45:00.000Z",
+      "state": "current",
+      "deploysAvailable": true,
+      "formsAvailable": true,
+      "activeForms": 0,
+      "latestDeploy": {
+        "id": "deploy-005",
+        "state": "ready",
+        "title": "Incident timeline polish",
+        "branch": "main",
+        "context": "production",
+        "deployUrl": "https://status.curatesos.com",
+        "adminUrl": "https://app.netlify.com/sites/status-room/deploys/deploy-005",
+        "createdAt": "2026-05-08T13:42:00.000Z",
+        "publishedAt": "2026-05-08T13:43:00.000Z",
+        "updatedAt": "2026-05-08T13:43:00.000Z",
+        "durationSeconds": 61
+      },
+      "deploys": [
+        {
+          "id": "deploy-005",
+          "state": "ready",
+          "title": "Incident timeline polish",
+          "branch": "main",
+          "context": "production",
+          "deployUrl": "https://status.curatesos.com",
+          "adminUrl": "https://app.netlify.com/sites/status-room/deploys/deploy-005",
+          "createdAt": "2026-05-08T13:42:00.000Z",
+          "publishedAt": "2026-05-08T13:43:00.000Z",
+          "updatedAt": "2026-05-08T13:43:00.000Z",
+          "durationSeconds": 61
+        }
+      ]
+    },
+    {
+      "id": "site-006",
+      "name": "client-proofroom",
+      "accountName": "CurateSOS",
+      "adminUrl": "https://app.netlify.com/sites/client-proofroom/overview",
+      "url": "https://proof.curatesos.com",
+      "customDomain": "proof.curatesos.com",
+      "repoUrl": "https://github.com/curatesos/proofroom",
+      "branch": "main",
+      "createdAt": "2026-03-18T20:30:00.000Z",
+      "updatedAt": "2026-05-07T10:18:00.000Z",
+      "state": "current",
+      "deploysAvailable": true,
+      "formsAvailable": true,
+      "activeForms": 4,
+      "latestDeploy": {
+        "id": "deploy-006",
+        "state": "ready",
+        "title": "Private review links",
+        "branch": "main",
+        "context": "production",
+        "deployUrl": "https://proof.curatesos.com",
+        "adminUrl": "https://app.netlify.com/sites/client-proofroom/deploys/deploy-006",
+        "createdAt": "2026-05-07T10:14:00.000Z",
+        "publishedAt": "2026-05-07T10:16:00.000Z",
+        "updatedAt": "2026-05-07T10:16:00.000Z",
+        "durationSeconds": 95
+      },
+      "deploys": [
+        {
+          "id": "deploy-006",
+          "state": "ready",
+          "title": "Private review links",
+          "branch": "main",
+          "context": "production",
+          "deployUrl": "https://proof.curatesos.com",
+          "adminUrl": "https://app.netlify.com/sites/client-proofroom/deploys/deploy-006",
+          "createdAt": "2026-05-07T10:14:00.000Z",
+          "publishedAt": "2026-05-07T10:16:00.000Z",
+          "updatedAt": "2026-05-07T10:16:00.000Z",
+          "durationSeconds": 95
+        }
+      ]
+    }
+  ],
+  "activity": [
+    {
+      "id": "deploy-001",
+      "state": "ready",
+      "title": "Homepage trust refresh",
+      "branch": "main",
+      "context": "production",
+      "deployUrl": "https://curatesos.com",
+      "adminUrl": "https://app.netlify.com/sites/curatesos-primary/deploys/deploy-001",
+      "createdAt": "2026-05-10T23:35:00.000Z",
+      "publishedAt": "2026-05-10T23:37:00.000Z",
+      "updatedAt": "2026-05-10T23:37:00.000Z",
+      "durationSeconds": 118,
+      "siteId": "site-001",
+      "siteName": "curatesos-primary",
+      "siteAdminUrl": "https://app.netlify.com/sites/curatesos-primary/overview"
+    },
+    {
+      "id": "deploy-002",
+      "state": "ready",
+      "title": "Dispatch queue tune-up",
+      "branch": "main",
+      "context": "production",
+      "deployUrl": "https://ops.curatesos.com",
+      "adminUrl": "https://app.netlify.com/sites/operator-portal/deploys/deploy-002",
+      "createdAt": "2026-05-10T22:10:00.000Z",
+      "publishedAt": "2026-05-10T22:11:00.000Z",
+      "updatedAt": "2026-05-10T22:11:00.000Z",
+      "durationSeconds": 78,
+      "siteId": "site-002",
+      "siteName": "operator-portal",
+      "siteAdminUrl": "https://app.netlify.com/sites/operator-portal/overview"
+    },
+    {
+      "id": "deploy-003",
+      "state": "error",
+      "title": "CRM routing rules",
+      "branch": "main",
+      "context": "production",
+      "deployUrl": "https://partners.curatesos.com",
+      "adminUrl": "https://app.netlify.com/sites/partner-intake/deploys/deploy-003",
+      "createdAt": "2026-05-10T21:01:00.000Z",
+      "publishedAt": null,
+      "updatedAt": "2026-05-10T21:04:00.000Z",
+      "durationSeconds": 181,
+      "errorMessage": "Build command exited with non-zero status",
+      "siteId": "site-003",
+      "siteName": "partner-intake",
+      "siteAdminUrl": "https://app.netlify.com/sites/partner-intake/overview"
+    },
+    {
+      "id": "deploy-004",
+      "state": "ready",
+      "title": "Investor metrics view",
+      "branch": "main",
+      "context": "production",
+      "deployUrl": "https://briefing.curatesos.com",
+      "adminUrl": "https://app.netlify.com/sites/executive-briefing/deploys/deploy-004",
+      "createdAt": "2026-05-09T17:07:00.000Z",
+      "publishedAt": "2026-05-09T17:09:00.000Z",
+      "updatedAt": "2026-05-09T17:09:00.000Z",
+      "durationSeconds": 132,
+      "siteId": "site-004",
+      "siteName": "executive-briefing",
+      "siteAdminUrl": "https://app.netlify.com/sites/executive-briefing/overview"
+    }
+  ],
+  "alerts": [
+    {
+      "severity": "critical",
+      "title": "Failed deploys require review",
+      "detail": "1 recent deploy returned a failure state."
+    },
+    {
+      "severity": "warning",
+      "title": "Latest production posture is degraded",
+      "detail": "partner-intake"
+    }
+  ],
+  "recommendations": [
+    "Review failed deploy logs from the activity stream and assign ownership before the next production release.",
+    "Keep NETLIFY_SITE_IDS pinned to revenue-critical properties so executive reporting remains focused.",
+    "Use the forms count to reconcile lead intake and support workflows against CRM records."
+  ]
+}
