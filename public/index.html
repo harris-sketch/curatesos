@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Institutional-quality operations dashboard for Netlify-powered business properties."
+    />
+    <title>CurateSOS Business Command Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="hero">
+        <nav class="topbar" aria-label="Dashboard controls">
+          <a class="brand" href="/">
+            <span class="brand-mark">C</span>
+            <span>
+              <strong>CurateSOS</strong>
+              <small>Business Command Center</small>
+            </span>
+          </a>
+          <div class="topbar-actions">
+            <span class="status-pill" id="connectionStatus">Connecting to Netlify</span>
+            <button class="ghost-button" id="refreshButton" type="button">Refresh data</button>
+          </div>
+        </nav>
+
+        <section class="hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">Netlify internal operations</p>
+            <h1>Executive-grade visibility for every production property.</h1>
+            <p>
+              Track deploy quality, site posture, intake forms, source control coverage, and operational
+              risk from one secure dashboard connected through Netlify Functions.
+            </p>
+          </div>
+          <aside class="control-card" aria-labelledby="controlTitle">
+            <div>
+              <p class="eyebrow">Portfolio health</p>
+              <h2 id="controlTitle"><span id="healthScore">--</span>%</h2>
+              <p id="healthSummary">Awaiting Netlify telemetry.</p>
+            </div>
+            <div class="health-ring" id="healthRing" aria-hidden="true"></div>
+          </aside>
+        </section>
+      </header>
+
+      <main>
+        <section class="section-header">
+          <div>
+            <p class="eyebrow">Operating metrics</p>
+            <h2>Business-critical signals</h2>
+          </div>
+          <p id="lastUpdated">Last updated: pending</p>
+        </section>
+
+        <section class="metric-grid" aria-label="Key metrics">
+          <article class="metric-card">
+            <span>Sites monitored</span>
+            <strong id="sitesMonitored">--</strong>
+            <small>Netlify properties in scope</small>
+          </article>
+          <article class="metric-card">
+            <span>Deploy success rate</span>
+            <strong id="deploySuccessRate">--</strong>
+            <small>Recent build and release quality</small>
+          </article>
+          <article class="metric-card">
+            <span>Active intake forms</span>
+            <strong id="activeForms">--</strong>
+            <small>Lead capture and operational forms</small>
+          </article>
+          <article class="metric-card">
+            <span>Connected tools</span>
+            <strong id="connectedTools">--</strong>
+            <small>Netlify, deploys, forms, repositories</small>
+          </article>
+        </section>
+
+        <section class="dashboard-grid">
+          <article class="panel panel-large">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Release operations</p>
+                <h2>Deploy activity stream</h2>
+              </div>
+              <span class="panel-kicker" id="averageDeployTime">Avg deploy: --</span>
+            </div>
+            <div class="activity-list" id="activityList" aria-live="polite"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Risk radar</p>
+                <h2>Alerts</h2>
+              </div>
+            </div>
+            <div class="alert-stack" id="alertStack"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Connected systems</p>
+                <h2>Internal tools</h2>
+              </div>
+            </div>
+            <div class="connection-list" id="connectionList"></div>
+          </article>
+        </section>
+
+        <section class="panel portfolio-panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Portfolio command</p>
+              <h2>Production properties</h2>
+            </div>
+            <label class="search-box">
+              <span>Search</span>
+              <input id="siteSearch" type="search" placeholder="Filter sites by name, branch, or domain" />
+            </label>
+          </div>
+          <div class="site-grid" id="siteGrid"></div>
+        </section>
+
+        <section class="panel recommendation-panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Operator notes</p>
+              <h2>Recommended next moves</h2>
+            </div>
+          </div>
+          <ol id="recommendationList"></ol>
+        </section>
+      </main>
+    </div>
+
+    <template id="emptyStateTemplate">
+      <div class="empty-state">
+        <strong>No data available yet</strong>
+        <p>Configure Netlify environment variables or adjust filters to include business sites.</p>
+      </div>
+    </template>
+
+    <script src="/app.js" defer></script>
+  </body>
+</html>
