@@ -232,8 +232,8 @@ a {
 
 .section h2 {
   font-size: clamp(32px, 5vw, 54px);
-  letter-spacing: -0.055em;
-  line-height: 1;
+  letter-spacing: -0.025em;
+  line-height: 1.06;
   margin: 10px 0 28px;
 }
 
@@ -398,6 +398,7 @@ a {
 .roadmap {
   padding-bottom: 96px;
   padding-top: 24px;
+  min-height: 100vh;
 }
 
 .roadmap-grid article span {
