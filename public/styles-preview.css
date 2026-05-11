@@ -18,7 +18,6 @@
 }
 
 html {
-  scroll-padding-top: 180px;
   scroll-behavior: smooth;
 }
 
@@ -47,20 +46,10 @@ a {
 
 .topbar {
   align-items: center;
-  backdrop-filter: blur(18px);
-  background: rgba(7, 17, 31, 0.78);
-  border: 1px solid var(--line);
-  border-radius: 22px;
   display: flex;
   justify-content: space-between;
-  left: clamp(20px, 5vw, 72px);
   margin: 0 auto;
   max-width: 1180px;
-  padding: 10px 14px;
-  position: fixed;
-  right: clamp(20px, 5vw, 72px);
-  top: 18px;
-  z-index: 50;
 }
 
 .brand {
@@ -100,7 +89,7 @@ a {
   display: grid;
   gap: 44px;
   grid-template-columns: minmax(0, 1.1fr) minmax(360px, 0.9fr);
-  margin: 116px auto 54px;
+  margin: 70px auto 54px;
   max-width: 1180px;
 }
 
@@ -231,7 +220,6 @@ a {
 }
 
 .section {
-  scroll-margin-top: 180px;
   margin: 0 auto;
   max-width: 1324px;
   padding-bottom: 72px;
@@ -409,8 +397,7 @@ a {
 
 .roadmap {
   padding-bottom: 96px;
-  padding-top: 120px;
-  min-height: calc(100vh + 160px);
+  padding-top: 24px;
 }
 
 .roadmap-grid article span {
@@ -464,11 +451,6 @@ a {
   .metric-grid,
   .control-list div {
     grid-template-columns: 1fr;
-  }
-
-  .topbar {
-    left: 12px;
-    right: 12px;
   }
 
   .hero,

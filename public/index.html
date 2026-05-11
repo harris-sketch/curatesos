@@ -232,28 +232,5 @@
       <a href="#top">Back to top</a>
     </footer>
 
-    <script>
-      document.querySelectorAll('a[href^="#"]').forEach((link) => {
-        link.addEventListener("click", (event) => {
-          const targetId = link.getAttribute("href");
-          const target = document.querySelector(targetId);
-
-          if (!target) {
-            return;
-          }
-
-          event.preventDefault();
-          const navOffset = 220;
-          const targetTop = target.getBoundingClientRect().top + window.scrollY - navOffset;
-
-          window.scrollTo({
-            top: Math.max(targetTop, 0),
-            behavior: "smooth",
-          });
-
-          history.pushState(null, "", targetId);
-        });
-      });
-    </script>
   </body>
 </html>
