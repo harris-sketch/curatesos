@@ -18,7 +18,7 @@
 }
 
 html {
-  scroll-padding-top: 112px;
+  scroll-padding-top: 180px;
   scroll-behavior: smooth;
 }
 
@@ -231,7 +231,7 @@ a {
 }
 
 .section {
-  scroll-margin-top: 112px;
+  scroll-margin-top: 180px;
   margin: 0 auto;
   max-width: 1324px;
   padding-bottom: 72px;
@@ -409,8 +409,8 @@ a {
 
 .roadmap {
   padding-bottom: 96px;
-  padding-top: 24px;
-  min-height: calc(100vh - 112px);
+  padding-top: 120px;
+  min-height: calc(100vh + 160px);
 }
 
 .roadmap-grid article span {
