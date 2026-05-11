@@ -28,7 +28,13 @@ export const handler = async (event) => {
       error: "netlify_auth_token_missing",
       message: "Set NETLIFY_AUTH_TOKEN in Netlify environment variables to connect live business tooling.",
       requiredEnvironment: ["NETLIFY_AUTH_TOKEN"],
-      optionalEnvironment: ["NETLIFY_ACCOUNT_SLUG", "NETLIFY_SITE_IDS", "NETLIFY_SITE_LIMIT", "NETLIFY_DETAIL_LIMIT"],
+      optionalEnvironment: [
+        "NETLIFY_ACCOUNT_SLUG",
+        "NETLIFY_SITE_IDS",
+        "NETLIFY_SITE_URLS",
+        "NETLIFY_SITE_LIMIT",
+        "NETLIFY_DETAIL_LIMIT",
+      ],
     });
   }
 
@@ -37,15 +43,17 @@ export const handler = async (event) => {
     const siteLimit = clampInteger(query.limit || process.env.NETLIFY_SITE_LIMIT, 1, 100, DEFAULT_SITE_LIMIT);
     const detailLimit = clampInteger(query.detailLimit || process.env.NETLIFY_DETAIL_LIMIT, 0, siteLimit, DEFAULT_DETAIL_LIMIT);
     const configuredSiteIds = splitCsv(process.env.NETLIFY_SITE_IDS);
+    const configuredSiteUrls = splitCsv(process.env.NETLIFY_SITE_URLS).map(normalizeHost);
     const accountSlug = process.env.NETLIFY_ACCOUNT_SLUG || "";
 
     const api = createNetlifyClient(token);
     const rawSites = await api.get("/sites", { per_page: 100 });
-    const filteredSites = filterSites(rawSites, { accountSlug, configuredSiteIds }).slice(0, siteLimit);
+    const filteredSites = filterSites(rawSites, { accountSlug, configuredSiteIds, configuredSiteUrls }).slice(0, siteLimit);
     const detailedSites = await enrichSites(api, filteredSites, detailLimit);
     const dashboard = buildDashboardPayload(detailedSites, {
       accountSlug,
       configuredSiteIds,
+      configuredSiteUrls,
       siteLimit,
       detailLimit,
     });
@@ -132,12 +140,13 @@ async function enrichSites(api, sites, detailLimit) {
   return Promise.all(sitePromises);
 }
 
-function filterSites(sites, { accountSlug, configuredSiteIds }) {
+function filterSites(sites, { accountSlug, configuredSiteIds, configuredSiteUrls }) {
   return sites
     .filter((site) => {
       const matchesAccount = !accountSlug || site.account_slug === accountSlug || site.account_name === accountSlug;
       const matchesSiteList = configuredSiteIds.length === 0 || configuredSiteIds.includes(site.id) || configuredSiteIds.includes(site.name);
-      return matchesAccount && matchesSiteList;
+      const matchesUrlList = configuredSiteUrls.length === 0 || siteHosts(site).some((host) => configuredSiteUrls.includes(host));
+      return matchesAccount && matchesSiteList && matchesUrlList;
     })
     .sort((first, second) => new Date(second.updated_at || 0) - new Date(first.updated_at || 0));
 }
@@ -216,7 +225,7 @@ function buildDashboardPayload(sites, filters) {
     source: "netlify",
     account: {
       slug: filters.accountSlug || "all-accessible-accounts",
-      siteFilterConfigured: filters.configuredSiteIds.length > 0,
+      siteFilterConfigured: filters.configuredSiteIds.length > 0 || filters.configuredSiteUrls.length > 0,
     },
     filters: {
       siteLimit: filters.siteLimit,
@@ -377,6 +386,26 @@ function splitCsv(value = "") {
     .split(",")
     .map((item) => item.trim())
     .filter(Boolean);
+}
+
+function siteHosts(site) {
+  return [site.ssl_url, site.url, site.custom_domain, site.name && `${site.name}.netlify.app`]
+    .filter(Boolean)
+    .map(normalizeHost)
+    .filter(Boolean);
+}
+
+function normalizeHost(value = "") {
+  const trimmed = value.trim().toLowerCase();
+  if (!trimmed) {
+    return "";
+  }
+
+  try {
+    return new URL(trimmed.startsWith("http") ? trimmed : `https://${trimmed}`).host.replace(/^www\./, "");
+  } catch {
+    return trimmed.replace(/^https?:\/\//, "").replace(/^www\./, "").replace(/\/.*$/, "");
+  }
 }
 
 function clampInteger(value, min, max, fallback) {

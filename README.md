@@ -33,12 +33,13 @@ Optional filters:
 
 ```bash
 NETLIFY_ACCOUNT_SLUG=your-team-slug
-NETLIFY_SITE_IDS=site-id-or-name-1,site-id-or-name-2
+NETLIFY_SITE_IDS=curatedportal
+NETLIFY_SITE_URLS=curatedportal.netlify.app
 NETLIFY_SITE_LIMIT=24
 NETLIFY_DETAIL_LIMIT=8
 ```
 
-`NETLIFY_SITE_IDS` is the best way to pin the dashboard to revenue-critical properties. `NETLIFY_DETAIL_LIMIT` controls how many sites receive deeper deploy and forms enrichment, which keeps API usage predictable for larger accounts.
+For `curatedportal.netlify.app`, set `NETLIFY_SITE_URLS=curatedportal.netlify.app`. You can also use `NETLIFY_SITE_IDS=curatedportal` if that is the Netlify site name. `NETLIFY_DETAIL_LIMIT` controls how many sites receive deeper deploy and forms enrichment, which keeps API usage predictable for larger accounts.
 
 ## Run locally
 
