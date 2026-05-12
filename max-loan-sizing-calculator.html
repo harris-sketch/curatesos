@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Max Loan Sizing Calculator | Curated Capital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy:        #0B1C3D;
+      --navy-mid:    #112347;
+      --navy-light:  #1A3060;
+      --gold:        #C9A96E;
+      --gold-light:  #E2C898;
+      --gold-muted:  #A07840;
+      --white:       #FFFFFF;
+      --text-primary:#F0E6D3;
+      --text-muted:  #8A9BB5;
+      --text-dim:    #506080;
+      --success:     #2ECC71;
+      --warning:     #F39C12;
+      --danger:      #E74C3C;
+      --border:      rgba(201, 169, 110, 0.25);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--navy);
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+
+    header {
+      background: var(--navy-mid);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .logo-mark {
+      width: 44px; height: 44px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-muted));
+      color: var(--navy);
+      font-weight: 700;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', Georgia, serif;
+    }
+    .brand-text { display: flex; flex-direction: column; gap: 2px; }
+    .brand-name {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+    }
+    .brand-sub { font-size: 12px; color: var(--text-muted); letter-spacing: 0.04em; }
+    .tool-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--gold-light);
+    }
+    .header-meta { font-size: 12px; color: var(--text-muted); }
+    .ust-strip {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--gold);
+      padding: 6px 12px;
+      background: rgba(201, 169, 110, 0.08);
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+    .ust-strip.loading { color: var(--text-muted); }
+
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 24px 48px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--navy-mid);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .card h2 {
+      margin: 0 0 20px;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--gold-light);
+    }
+
+    .field { margin-bottom: 18px; }
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .field input, .field select {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+    }
+    .field input:focus, .field select:focus {
+      border-color: var(--gold);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(201,169,110,0.2);
+    }
+    .field input.error, .field select.error {
+      border-color: var(--danger);
+      box-shadow: 0 0 0 2px rgba(231,76,60,0.15);
+    }
+    .field-hint { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
+    .field-error {
+      font-size: 12px;
+      color: var(--danger);
+      margin-top: 6px;
+      display: none;
+    }
+    .field-error.visible { display: block; }
+
+    .field-group { display: none; }
+    .field-group.visible { display: block; }
+
+    .btn-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold), var(--gold-muted));
+      color: var(--navy);
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+    }
+    .btn-primary:hover { filter: brightness(1.05); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; filter: none; }
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+    }
+    .btn-secondary:hover { background: rgba(201,169,110,0.1); }
+
+    .results-hero {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.75rem;
+      color: var(--gold-light);
+      margin-bottom: 8px;
+    }
+    .results-sub { color: var(--text-muted); font-size: 14px; margin-bottom: 20px; }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 500px) { .stat-grid { grid-template-columns: 1fr; } }
+    .stat {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px 14px;
+    }
+    .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); }
+    .stat-value { font-family: 'JetBrains Mono', monospace; font-size: 1rem; color: var(--text-primary); margin-top: 4px; }
+
+    .badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+    .badge {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 4px;
+      border: 1px solid transparent;
+    }
+    .badge-ok {
+      background: rgba(46,204,113,0.15);
+      color: var(--success);
+      border-color: rgba(46,204,113,0.3);
+    }
+    .badge-warn {
+      background: rgba(243,156,18,0.15);
+      color: var(--warning);
+      border-color: rgba(243,156,18,0.3);
+    }
+    .badge-bad {
+      background: rgba(231,76,60,0.15);
+      color: var(--danger);
+      border-color: rgba(231,76,60,0.3);
+    }
+
+    .notes {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .notes ul { margin: 8px 0 0; padding-left: 18px; }
+    .notes li { margin-bottom: 6px; }
+
+    .empty-state {
+      color: var(--text-dim);
+      font-size: 14px;
+      padding: 12px 0;
+    }
+
+    .error-banner {
+      display: none;
+      background: rgba(231,76,60,0.12);
+      border: 1px solid rgba(231,76,60,0.35);
+      color: var(--danger);
+      padding: 12px 14px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+    .error-banner.visible { display: block; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <div class="logo-mark">CC</div>
+        <div class="brand-text">
+          <span class="brand-name">Curated Capital</span>
+          <span class="brand-sub">Internal Tools</span>
+        </div>
+      </div>
+      <div class="tool-title">Max Loan Sizing Calculator</div>
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <div id="ustWidget" class="ust-strip loading" aria-live="polite">10Y UST: loading…</div>
+        <div class="header-meta">CA DRE 01900872</div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="layout">
+      <section class="card" aria-labelledby="inputsHeading">
+        <h2 id="inputsHeading">Deal inputs</h2>
+
+        <div class="field">
+          <label for="productType">Loan product</label>
+          <select id="productType">
+            <option value="fixFlip">Fix &amp; Flip</option>
+            <option value="bridge">Bridge</option>
+            <option value="dscr">DSCR</option>
+            <option value="groundUp">Ground-Up Construction</option>
+            <option value="cashOut">Cash-Out Refi</option>
+            <option value="secondTd">2nd Trust Deed</option>
+          </select>
+        </div>
+
+        <div id="fieldGroupFixFlip" class="field-group visible">
+          <div class="field">
+            <label for="purchasePrice">Purchase price</label>
+            <input type="text" id="purchasePrice" inputmode="decimal" placeholder="e.g. 485000" autocomplete="off">
+            <div id="purchasePriceError" class="field-error"></div>
+          </div>
+          <div class="field">
+            <label for="rehabBudget">Rehab / construction budget</label>
+            <input type="text" id="rehabBudget" inputmode="decimal" placeholder="e.g. 125000" autocomplete="off">
+            <div id="rehabBudgetError" class="field-error"></div>
+          </div>
+          <p class="field-hint">Max 75% LTC (purchase + rehab). Loan range $150K–$3M.</p>
+        </div>
+
+        <div id="fieldGroupBridge" class="field-group">
+          <div class="field">
+            <label for="asIsValueBridge">As-is value</label>
+            <input type="text" id="asIsValueBridge" inputmode="decimal" placeholder="e.g. 920000" autocomplete="off">
+            <div id="asIsValueBridgeError" class="field-error"></div>
+          </div>
+          <p class="field-hint">Max 70% LTV. Loan range $200K–$5M.</p>
+        </div>
+
+        <div id="fieldGroupDscr" class="field-group">
+          <div class="field">
+            <label for="propertyValueDscr">Property value</label>
+            <input type="text" id="propertyValueDscr" inputmode="decimal" placeholder="e.g. 625000" autocomplete="off">
+            <div id="propertyValueDscrError" class="field-error"></div>
+          </div>
+          <div class="field">
+            <label for="monthlyRent">Monthly gross rent (optional)</label>
+            <input type="text" id="monthlyRent" inputmode="decimal" placeholder="e.g. 4200" autocomplete="off">
+            <div id="monthlyRentError" class="field-error"></div>
+          </div>
+          <div class="field">
+            <label for="monthlyPitia">Monthly PITIA (optional)</label>
+            <input type="text" id="monthlyPitia" inputmode="decimal" placeholder="e.g. 3100" autocomplete="off">
+            <div id="monthlyPitiaError" class="field-error"></div>
+          </div>
+          <p class="field-hint">Max 70% LTV. Min DSCR 1.10x when rent &amp; PITIA provided. Loan range $150K–$3M.</p>
+        </div>
+
+        <div id="fieldGroupGroundUp" class="field-group">
+          <div class="field">
+            <label for="totalProjectCost">Total project cost (land + vertical)</label>
+            <input type="text" id="totalProjectCost" inputmode="decimal" placeholder="e.g. 2400000" autocomplete="off">
+            <div id="totalProjectCostError" class="field-error"></div>
+          </div>
+          <p class="field-hint">Max 65% LTC. Loan range $300K–$7.5M.</p>
+        </div>
+
+        <div id="fieldGroupCashOut" class="field-group">
+          <div class="field">
+            <label for="propertyValueCashOut">Property value</label>
+            <input type="text" id="propertyValueCashOut" inputmode="decimal" placeholder="e.g. 1100000" autocomplete="off">
+            <div id="propertyValueCashOutError" class="field-error"></div>
+          </div>
+          <p class="field-hint">Max 65% LTV. Loan range $150K–$3M.</p>
+        </div>
+
+        <div id="fieldGroupSecond" class="field-group">
+          <div class="field">
+            <label for="propertyValueSecond">Property value</label>
+            <input type="text" id="propertyValueSecond" inputmode="decimal" placeholder="e.g. 875000" autocomplete="off">
+            <div id="propertyValueSecondError" class="field-error"></div>
+          </div>
+          <div class="field">
+            <label for="firstLienBalance">Existing 1st lien balance</label>
+            <input type="text" id="firstLienBalance" inputmode="decimal" placeholder="e.g. 520000" autocomplete="off">
+            <div id="firstLienBalanceError" class="field-error"></div>
+          </div>
+          <p class="field-hint">Max 65% CLTV. New 2nd range $100K–$750K.</p>
+        </div>
+
+        <div class="btn-row">
+          <button type="button" class="btn-primary" id="calculateBtn">Calculate max loan</button>
+          <button type="button" class="btn-secondary" id="resetBtn">Reset</button>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="resultsHeading">
+        <h2 id="resultsHeading">Sizing output</h2>
+        <div id="errorBanner" class="error-banner" role="alert"></div>
+        <div id="resultsEmpty" class="empty-state">Enter deal details and run a calculation to see max loan, ratio, and program guardrails.</div>
+        <div id="resultsContent" style="display:none;">
+          <div id="resultsHero" class="results-hero"></div>
+          <div id="resultsSub" class="results-sub"></div>
+          <div class="stat-grid" id="statGrid"></div>
+          <div class="badge-row" id="badgeRow"></div>
+          <div class="notes" id="notesBlock"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const formatCurrency = (n) =>
+      new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
+
+    const formatPct = (n, decimals = 2) => `${parseFloat(n).toFixed(decimals)}%`;
+
+    const LIMITS = {
+      fixFlip: { pct: 0.75, minLoan: 150000, maxLoan: 3000000, label: 'LTC', basisLabel: 'Purchase + rehab' },
+      bridge: { pct: 0.70, minLoan: 200000, maxLoan: 5000000, label: 'LTV', basisLabel: 'As-is value' },
+      dscr: { pct: 0.70, minLoan: 150000, maxLoan: 3000000, label: 'LTV', basisLabel: 'Property value', minDscr: 1.1 },
+      groundUp: { pct: 0.65, minLoan: 300000, maxLoan: 7500000, label: 'LTC', basisLabel: 'Total project cost' },
+      cashOut: { pct: 0.65, minLoan: 150000, maxLoan: 3000000, label: 'LTV', basisLabel: 'Property value' },
+      secondTd: { pct: 0.65, minLoan: 100000, maxLoan: 750000, label: 'CLTV', basisLabel: 'Property value' }
+    };
+
+    function parseMoney(raw) {
+      if (raw === undefined || raw === null) return NaN;
+      const s = String(raw).trim().replace(/[$,]/g, '');
+      if (s === '') return NaN;
+      const n = Number(s);
+      return Number.isFinite(n) ? n : NaN;
+    }
+
+    function setFieldError(inputId, errorId, message) {
+      const input = document.getElementById(inputId);
+      const err = document.getElementById(errorId);
+      if (!input || !err) return;
+      if (message) {
+        input.classList.add('error');
+        err.textContent = message;
+        err.classList.add('visible');
+      } else {
+        input.classList.remove('error');
+        err.textContent = '';
+        err.classList.remove('visible');
+      }
+    }
+
+    function clearAllFieldErrors() {
+      document.querySelectorAll('.field-error.visible').forEach((el) => {
+        el.classList.remove('visible');
+        el.textContent = '';
+      });
+      document.querySelectorAll('input.error, select.error').forEach((el) => el.classList.remove('error'));
+    }
+
+    function validatePositive(name, value, inputId, errorId) {
+      if (!Number.isFinite(value) || value <= 0) {
+        setFieldError(inputId, errorId, `Enter a valid positive amount for ${name}.`);
+        return false;
+      }
+      setFieldError(inputId, errorId, '');
+      return true;
+    }
+
+    function validateOptionalNonNegative(name, raw, inputId, errorId) {
+      const s = String(raw ?? '').trim();
+      if (s === '') {
+        setFieldError(inputId, errorId, '');
+        return { ok: true, value: null };
+      }
+      const value = parseMoney(raw);
+      if (!Number.isFinite(value) || value < 0) {
+        setFieldError(inputId, errorId, `${name} must be zero or greater.`);
+        return { ok: false, value: null };
+      }
+      setFieldError(inputId, errorId, '');
+      return { ok: true, value };
+    }
+
+    function clampLoan(rawMax, minLoan, maxLoan) {
+      const cappedHigh = Math.min(rawMax, maxLoan);
+      if (cappedHigh < minLoan) {
+        return { amount: null, reason: 'belowMin' };
+      }
+      return { amount: cappedHigh, reason: 'ok' };
+    }
+
+    function updateProductPanels() {
+      const product = document.getElementById('productType').value;
+      const map = {
+        fixFlip: 'fieldGroupFixFlip',
+        bridge: 'fieldGroupBridge',
+        dscr: 'fieldGroupDscr',
+        groundUp: 'fieldGroupGroundUp',
+        cashOut: 'fieldGroupCashOut',
+        secondTd: 'fieldGroupSecond'
+      };
+      Object.values(map).forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('visible');
+      });
+      const active = document.getElementById(map[product]);
+      if (active) active.classList.add('visible');
+    }
+
+    function simulatedUST() {
+      const lo = 4.2;
+      const hi = 4.8;
+      return lo + Math.random() * (hi - lo);
+    }
+
+    async function fetchTreasuryUST() {
+      const base =
+        'https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/avg_interest_rates';
+      const filter =
+        'filter=security_desc:eq:Treasury Notes,security_type_desc:eq:Marketable' +
+        '&sort=-record_date&page[size]=1';
+      const res = await fetch(base + '?' + filter);
+      if (!res.ok) throw new Error('Treasury HTTP ' + res.status);
+      const data = await res.json();
+      const row = (data.data && data.data[0]) || null;
+      const raw = row && (row.avg_interest_rate_amt ?? row.avg_interest_rate);
+      const n = raw !== undefined && raw !== null ? Number(String(raw).replace('%', '')) : NaN;
+      if (!Number.isFinite(n) || n <= 0) throw new Error('No Treasury Notes row');
+      return n;
+    }
+
+    async function fetchFredUST() {
+      const key = sessionStorage.getItem('fredApiKey');
+      if (!key) throw new Error('No FRED key');
+      const url =
+        'https://api.stlouisfed.org/fred/series/observations?series_id=DGS10&api_key=' +
+        encodeURIComponent(key) +
+        '&file_type=json&sort_order=desc&limit=1';
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('FRED HTTP ' + res.status);
+      const data = await res.json();
+      const v = data.observations && data.observations[0] && Number(data.observations[0].value);
+      if (!Number.isFinite(v) || v <= 0) throw new Error('FRED parse');
+      return v;
+    }
+
+    async function loadUSTWidget() {
+      const el = document.getElementById('ustWidget');
+      if (!el) return;
+      el.classList.add('loading');
+      el.textContent = '10Y UST: loading…';
+      let rate = null;
+      try {
+        rate = await fetchTreasuryUST();
+      } catch {
+        try {
+          rate = await fetchFredUST();
+        } catch {
+          try {
+            rate = simulatedUST();
+          } catch {
+            rate = 4.5;
+          }
+        }
+      }
+      if (!Number.isFinite(rate)) rate = 4.5;
+      el.textContent = '10Y UST: ' + formatPct(rate, 2);
+      el.classList.remove('loading');
+    }
+
+    function hideResults() {
+      document.getElementById('resultsEmpty').style.display = '';
+      document.getElementById('resultsContent').style.display = 'none';
+      const banner = document.getElementById('errorBanner');
+      banner.classList.remove('visible');
+      banner.textContent = '';
+    }
+
+    function showErrorBanner(msg) {
+      const banner = document.getElementById('errorBanner');
+      banner.textContent = msg;
+      banner.classList.add('visible');
+    }
+
+    function renderResults(payload) {
+      document.getElementById('resultsEmpty').style.display = 'none';
+      document.getElementById('resultsContent').style.display = '';
+      const banner = document.getElementById('errorBanner');
+      banner.classList.remove('visible');
+      banner.textContent = '';
+
+      const hero = document.getElementById('resultsHero');
+      const sub = document.getElementById('resultsSub');
+      const statGrid = document.getElementById('statGrid');
+      const badgeRow = document.getElementById('badgeRow');
+      const notes = document.getElementById('notesBlock');
+
+      if (payload.error) {
+        hero.textContent = '—';
+        sub.textContent = payload.error;
+        statGrid.textContent = '';
+        badgeRow.textContent = '';
+        notes.innerHTML = '';
+        return;
+      }
+
+      hero.textContent = formatCurrency(payload.amount);
+      sub.textContent = payload.subtitle;
+
+      statGrid.textContent = '';
+      payload.stats.forEach((s) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'stat';
+        const lab = document.createElement('div');
+        lab.className = 'stat-label';
+        lab.textContent = s.label;
+        const val = document.createElement('div');
+        val.className = 'stat-value';
+        val.textContent = s.value;
+        wrap.appendChild(lab);
+        wrap.appendChild(val);
+        statGrid.appendChild(wrap);
+      });
+
+      badgeRow.textContent = '';
+      payload.badges.forEach((b) => {
+        const span = document.createElement('span');
+        span.className = 'badge ' + b.className;
+        span.textContent = b.text;
+        badgeRow.appendChild(span);
+      });
+
+      notes.textContent = '';
+      const ul = document.createElement('ul');
+      payload.notes.forEach((line) => {
+        const li = document.createElement('li');
+        li.textContent = line;
+        ul.appendChild(li);
+      });
+      notes.appendChild(ul);
+    }
+
+    function runCalculation() {
+      clearAllFieldErrors();
+      const product = document.getElementById('productType').value;
+      const L = LIMITS[product];
+
+      const stats = [];
+      const badges = [];
+      const notes = [];
+      let subtitle = '';
+
+      if (product === 'fixFlip') {
+        const purchase = parseMoney(document.getElementById('purchasePrice').value);
+        const rehab = parseMoney(document.getElementById('rehabBudget').value);
+        let ok =
+          validatePositive('purchase price', purchase, 'purchasePrice', 'purchasePriceError') &&
+          validatePositive('rehab budget', rehab, 'rehabBudget', 'rehabBudgetError');
+        if (!ok) {
+          hideResults();
+          return;
+        }
+        const basis = purchase + rehab;
+        const raw = L.pct * basis;
+        const clamped = clampLoan(raw, L.minLoan, L.maxLoan);
+        stats.push({ label: L.basisLabel, value: formatCurrency(basis) });
+        stats.push({ label: 'Raw ' + L.label + ' (' + formatPct(L.pct * 100, 0) + ')', value: formatCurrency(raw) });
+        stats.push({ label: 'Program min / max', value: formatCurrency(L.minLoan) + ' – ' + formatCurrency(L.maxLoan) });
+        if (clamped.reason === 'belowMin') {
+          badges.push({ className: 'badge-bad', text: 'Below $150K floor' });
+          renderResults({
+            error: false,
+            amount: 0,
+            subtitle: 'Sized loan is below the Fix & Flip minimum of $150,000.',
+            stats,
+            badges,
+            notes: [
+              'Increase purchase/rehab or adjust structure so LTC-based proceeds clear the floor.',
+              'Figures are indicative only; full credit, collateral, and liquidity review required.'
+            ]
+          });
+          return;
+        }
+        badges.push({ className: 'badge-ok', text: 'Within program band' });
+        subtitle = 'Fix & Flip at ' + formatPct((clamped.amount / basis) * 100, 2) + ' ' + L.label + ' on ' + formatCurrency(basis) + ' basis.';
+        notes.push('Max 75% LTC on Los Angeles, Orange, and San Diego collateral subject to underwriting.');
+        renderResults({ error: false, amount: clamped.amount, subtitle, stats, badges, notes });
+        return;
+      }
+
+      if (product === 'bridge') {
+        const value = parseMoney(document.getElementById('asIsValueBridge').value);
+        if (!validatePositive('as-is value', value, 'asIsValueBridge', 'asIsValueBridgeError')) {
+          hideResults();
+          return;
+        }
+        const raw = L.pct * value;
+        const clamped = clampLoan(raw, L.minLoan, L.maxLoan);
+        stats.push({ label: L.basisLabel, value: formatCurrency(value) });
+        stats.push({ label: 'Raw ' + L.label, value: formatCurrency(raw) });
+        stats.push({ label: 'Program min / max', value: formatCurrency(L.minLoan) + ' – ' + formatCurrency(L.maxLoan) });
+        if (clamped.reason === 'belowMin') {
+          badges.push({ className: 'badge-bad', text: 'Below $200K floor' });
+          renderResults({
+            error: false,
+            amount: 0,
+            subtitle: 'Sized loan is below the Bridge minimum of $200,000.',
+            stats,
+            badges,
+            notes: ['Raise LTV basis (value) or reduce payoffs so gross loan clears the floor.', 'Indicative only — full underwriting required.']
+          });
+          return;
+        }
+        badges.push({ className: 'badge-ok', text: 'Within program band' });
+        subtitle = 'Bridge at ' + formatPct((clamped.amount / value) * 100, 2) + ' LTV on ' + formatCurrency(value) + ' as-is.';
+        notes.push('6–24 month terms typical; exit strategy must be documented.');
+        renderResults({ error: false, amount: clamped.amount, subtitle, stats, badges, notes });
+        return;
+      }
+
+      if (product === 'dscr') {
+        const value = parseMoney(document.getElementById('propertyValueDscr').value);
+        if (!validatePositive('property value', value, 'propertyValueDscr', 'propertyValueDscrError')) {
+          hideResults();
+          return;
+        }
+        const rentCheck = validateOptionalNonNegative('Monthly gross rent', document.getElementById('monthlyRent').value, 'monthlyRent', 'monthlyRentError');
+        const pitiaCheck = validateOptionalNonNegative('Monthly PITIA', document.getElementById('monthlyPitia').value, 'monthlyPitia', 'monthlyPitiaError');
+        if (!rentCheck.ok || !pitiaCheck.ok) {
+          hideResults();
+          return;
+        }
+        const raw = L.pct * value;
+        const clamped = clampLoan(raw, L.minLoan, L.maxLoan);
+        stats.push({ label: L.basisLabel, value: formatCurrency(value) });
+        stats.push({ label: 'Raw ' + L.label, value: formatCurrency(raw) });
+        stats.push({ label: 'Program min / max', value: formatCurrency(L.minLoan) + ' – ' + formatCurrency(L.maxLoan) });
+
+        if (rentCheck.value != null && pitiaCheck.value != null && pitiaCheck.value > 0) {
+          const dscr = rentCheck.value / pitiaCheck.value;
+          stats.push({ label: 'DSCR (rent / PITIA)', value: dscr.toFixed(2) + 'x' });
+          if (dscr < L.minDscr) {
+            badges.push({ className: 'badge-warn', text: 'DSCR under 1.10x' });
+            notes.push('Stated DSCR is below the 1.10x guideline; sizing may require additional equity or lower leverage.');
+          } else {
+            badges.push({ className: 'badge-ok', text: 'DSCR clears 1.10x' });
+          }
+        } else {
+          notes.push('Enter rent and PITIA to check DSCR against the 1.10x minimum.');
+        }
+
+        if (clamped.reason === 'belowMin') {
+          badges.push({ className: 'badge-bad', text: 'Below $150K floor' });
+          renderResults({
+            error: false,
+            amount: 0,
+            subtitle: 'Sized loan is below the DSCR minimum of $150,000.',
+            stats,
+            badges,
+            notes: notes.concat(['Indicative only — full underwriting required.'])
+          });
+          return;
+        }
+        if (!badges.length) badges.push({ className: 'badge-ok', text: 'LTV within program' });
+        subtitle = 'DSCR at ' + formatPct((clamped.amount / value) * 100, 2) + ' LTV on ' + formatCurrency(value) + '.';
+        notes.push('30-year / 5-1 ARM structures common; verify taxes, insurance, and HOA in PITIA.');
+        renderResults({ error: false, amount: clamped.amount, subtitle, stats, badges, notes });
+        return;
+      }
+
+      if (product === 'groundUp') {
+        const cost = parseMoney(document.getElementById('totalProjectCost').value);
+        if (!validatePositive('total project cost', cost, 'totalProjectCost', 'totalProjectCostError')) {
+          hideResults();
+          return;
+        }
+        const raw = L.pct * cost;
+        const clamped = clampLoan(raw, L.minLoan, L.maxLoan);
+        stats.push({ label: L.basisLabel, value: formatCurrency(cost) });
+        stats.push({ label: 'Raw ' + L.label, value: formatCurrency(raw) });
+        stats.push({ label: 'Program min / max', value: formatCurrency(L.minLoan) + ' – ' + formatCurrency(L.maxLoan) });
+        if (clamped.reason === 'belowMin') {
+          badges.push({ className: 'badge-bad', text: 'Below $300K floor' });
+          renderResults({
+            error: false,
+            amount: 0,
+            subtitle: 'Sized loan is below the Ground-Up minimum of $300,000.',
+            stats,
+            badges,
+            notes: ['Increase eligible costs or adjust capital stack.', 'Indicative only — full underwriting required.']
+          });
+          return;
+        }
+        badges.push({ className: 'badge-ok', text: 'Within program band' });
+        subtitle = 'Ground-Up at ' + formatPct((clamped.amount / cost) * 100, 2) + ' LTC on ' + formatCurrency(cost) + ' project cost.';
+        notes.push('Draw schedule and builder risk review required on vertical construction.');
+        renderResults({ error: false, amount: clamped.amount, subtitle, stats, badges, notes });
+        return;
+      }
+
+      if (product === 'cashOut') {
+        const value = parseMoney(document.getElementById('propertyValueCashOut').value);
+        if (!validatePositive('property value', value, 'propertyValueCashOut', 'propertyValueCashOutError')) {
+          hideResults();
+          return;
+        }
+        const raw = L.pct * value;
+        const clamped = clampLoan(raw, L.minLoan, L.maxLoan);
+        stats.push({ label: L.basisLabel, value: formatCurrency(value) });
+        stats.push({ label: 'Raw ' + L.label, value: formatCurrency(raw) });
+        stats.push({ label: 'Program min / max', value: formatCurrency(L.minLoan) + ' – ' + formatCurrency(L.maxLoan) });
+        if (clamped.reason === 'belowMin') {
+          badges.push({ className: 'badge-bad', text: 'Below $150K floor' });
+          renderResults({
+            error: false,
+            amount: 0,
+            subtitle: 'Sized loan is below the Cash-Out minimum of $150,000.',
+            stats,
+            badges,
+            notes: ['Value or leverage assumptions may need revision.', 'Indicative only — full underwriting required.']
+          });
+          return;
+        }
+        badges.push({ className: 'badge-ok', text: 'Within program band' });
+        subtitle = 'Cash-Out Refi at ' + formatPct((clamped.amount / value) * 100, 2) + ' LTV on ' + formatCurrency(value) + '.';
+        notes.push('Title and seasoning requirements apply; confirm payoffs and use of proceeds.');
+        renderResults({ error: false, amount: clamped.amount, subtitle, stats, badges, notes });
+        return;
+      }
+
+      if (product === 'secondTd') {
+        const value = parseMoney(document.getElementById('propertyValueSecond').value);
+        const firstBal = parseMoney(document.getElementById('firstLienBalance').value);
+        let ok =
+          validatePositive('property value', value, 'propertyValueSecond', 'propertyValueSecondError') &&
+          validatePositive('1st lien balance', firstBal, 'firstLienBalance', 'firstLienBalanceError');
+        if (!ok) {
+          hideResults();
+          return;
+        }
+        if (firstBal >= value) {
+          setFieldError('firstLienBalance', 'firstLienBalanceError', '1st lien balance must be less than property value for CLTV math.');
+          hideResults();
+          return;
+        }
+        const maxByCltv = L.pct * value - firstBal;
+        stats.push({ label: 'Property value', value: formatCurrency(value) });
+        stats.push({ label: '65% CLTV cap', value: formatCurrency(L.pct * value) });
+        stats.push({ label: 'Room under CLTV cap', value: formatCurrency(maxByCltv) });
+        const clamped = clampLoan(maxByCltv, L.minLoan, L.maxLoan);
+        if (maxByCltv <= 0) {
+          badges.push({ className: 'badge-bad', text: 'No CLTV room' });
+          renderResults({
+            error: false,
+            amount: 0,
+            subtitle: 'Existing 1st lien already meets or exceeds 65% CLTV — no new 2nd capacity at guideline.',
+            stats,
+            badges,
+            notes: ['Pay down senior debt or negotiate subordination terms before a new 2nd.', 'Indicative only — full underwriting required.']
+          });
+          return;
+        }
+        if (clamped.reason === 'belowMin') {
+          badges.push({ className: 'badge-bad', text: 'Below $100K floor' });
+          renderResults({
+            error: false,
+            amount: 0,
+            subtitle: 'Available 2nd proceeds are below the $100,000 program minimum.',
+            stats,
+            badges,
+            notes: ['Adjust senior balance or consider alternative structure.', 'Indicative only — full underwriting required.']
+          });
+          return;
+        }
+        badges.push({ className: 'badge-ok', text: '2nd within CLTV band' });
+        subtitle =
+          'New 2nd of ' +
+          formatCurrency(clamped.amount) +
+          ' (CLTV ' +
+          formatPct(((firstBal + clamped.amount) / value) * 100, 2) +
+          ').';
+        notes.push('Subordination, title, and combined payment analysis required on all junior liens.');
+        renderResults({ error: false, amount: clamped.amount, subtitle, stats, badges, notes });
+      }
+    }
+
+    function resetForm() {
+      document.getElementById('productType').value = 'fixFlip';
+      document.getElementById('purchasePrice').value = '';
+      document.getElementById('rehabBudget').value = '';
+      document.getElementById('asIsValueBridge').value = '';
+      document.getElementById('propertyValueDscr').value = '';
+      document.getElementById('monthlyRent').value = '';
+      document.getElementById('monthlyPitia').value = '';
+      document.getElementById('totalProjectCost').value = '';
+      document.getElementById('propertyValueCashOut').value = '';
+      document.getElementById('propertyValueSecond').value = '';
+      document.getElementById('firstLienBalance').value = '';
+      clearAllFieldErrors();
+      updateProductPanels();
+      hideResults();
+    }
+
+    document.getElementById('productType').addEventListener('change', updateProductPanels);
+    document.getElementById('calculateBtn').addEventListener('click', runCalculation);
+    document.getElementById('resetBtn').addEventListener('click', resetForm);
+
+    updateProductPanels();
+    loadUSTWidget().catch(() => {
+      const el = document.getElementById('ustWidget');
+      if (el) {
+        el.textContent = '10Y UST: ' + formatPct(4.5, 2) + ' (fallback)';
+        el.classList.remove('loading');
+      }
+    });
+  </script>
+</body>
+</html>
