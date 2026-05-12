@@ -1,0 +1,330 @@
+# Curated Capital — Cursor Rules
+# Internal Tooling Stack | Pacific Prestige Properties Inc (CA DRE 01900872)
+# Last updated: 2026
+
+You are a senior full-stack developer building internal tools for Curated Capital,
+a vertically integrated private hard money lender operating in Los Angeles County,
+Orange County, and San Diego markets. All tools are standalone HTML files deployed
+to Netlify. Follow every rule below precisely on every generation.
+
+---
+
+## COMPANY CONTEXT
+
+- **Entity**: Curated Capital / Pacific Prestige Properties Inc
+- **License**: CA DRE 01900872
+- **Markets**: Los Angeles County, Orange County, San Diego
+- **Subsidiaries**: Curated Construction Corp, Eagle Rock Escrow
+- **Loan Products**: Fix & Flip, Bridge, DSCR, Ground-Up Construction, Cash-Out Refi, 2nd Trust Deed
+- **Loan Range**: $150K – $7.5M
+- **LTV/LTC by Product**:
+  - Fix & Flip: up to 75% LTC (purchase + rehab)
+  - Bridge: up to 70% LTV
+  - DSCR: up to 70% LTV
+  - Ground-Up Construction: up to 65% LTC
+  - Cash-Out Refi: up to 65% LTV
+  - 2nd Trust Deed: up to 65% CLTV
+- **Team**: Harris (founder), Stephanie (ops/processing), Alicia (investor relations),
+  Greg Brown (loan officer/broker outreach), Kevin (construction)
+
+---
+
+## DESIGN SYSTEM — NEVER DEVIATE
+
+### Colors
+```css
+--navy:        #0B1C3D;   /* primary background */
+--navy-mid:    #112347;   /* card / panel background */
+--navy-light:  #1A3060;   /* border, hover states */
+--gold:        #C9A96E;   /* primary accent */
+--gold-light:  #E2C898;   /* hover accent */
+--gold-muted:  #A07840;   /* secondary accent, disabled states */
+--white:       #FFFFFF;
+--text-primary:#F0E6D3;   /* warm off-white for body text */
+--text-muted:  #8A9BB5;   /* secondary labels */
+--text-dim:    #506080;   /* placeholder, disabled */
+--success:     #2ECC71;
+--warning:     #F39C12;
+--danger:      #E74C3C;
+--border:      rgba(201, 169, 110, 0.25);
+```
+
+### Typography
+- **Headings**: `'Playfair Display', Georgia, serif` — used for page titles, section headers, and tool names
+- **Body / UI**: `'Inter', -apple-system, sans-serif` — used for all labels, inputs, data
+- **Monospace**: `'JetBrains Mono', 'Fira Code', monospace` — used for loan amounts, percentages, LTV figures
+
+Load from Google Fonts:
+```html
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+```
+
+### Spacing & Layout
+- Container max-width: `1200px`, centered
+- Section padding: `24px` (cards), `40px` (page sections)
+- Border radius: `8px` (cards), `6px` (inputs/buttons), `4px` (badges)
+- Subtle box-shadow on cards: `0 4px 20px rgba(0,0,0,0.3)`
+
+### Buttons
+```css
+/* Primary */
+background: linear-gradient(135deg, #C9A96E, #A07840);
+color: #0B1C3D;
+font-weight: 600;
+padding: 10px 20px;
+border-radius: 6px;
+border: none;
+cursor: pointer;
+
+/* Secondary */
+background: transparent;
+border: 1px solid #C9A96E;
+color: #C9A96E;
+```
+
+### Inputs & Selects
+```css
+background: rgba(255,255,255,0.05);
+border: 1px solid rgba(201,169,110,0.25);
+color: #F0E6D3;
+border-radius: 6px;
+padding: 10px 14px;
+font-family: 'Inter', sans-serif;
+```
+On focus: `border-color: #C9A96E; outline: none; box-shadow: 0 0 0 2px rgba(201,169,110,0.2);`
+
+### Status Badges
+```css
+.badge-active    { background: rgba(46,204,113,0.15); color: #2ECC71; border: 1px solid rgba(46,204,113,0.3); }
+.badge-pending   { background: rgba(243,156,18,0.15); color: #F39C12; border: 1px solid rgba(243,156,18,0.3); }
+.badge-closed    { background: rgba(138,155,181,0.15); color: #8A9BB5; border: 1px solid rgba(138,155,181,0.3); }
+.badge-denied    { background: rgba(231,76,60,0.15); color: #E74C3C; border: 1px solid rgba(231,76,60,0.3); }
+```
+
+---
+
+## FILE ARCHITECTURE — EVERY TOOL
+
+Every tool is a **single self-contained HTML file** with this structure:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>[Tool Name] | Curated Capital</title>
+  <!-- Google Fonts -->
+  <!-- html2pdf.js CDN (if PDF export needed) -->
+  <style>
+    /* ALL CSS inline — no external stylesheets */
+    /* Use CSS variables from design system above */
+  </style>
+</head>
+<body>
+  <!-- Header with Curated Capital branding -->
+  <!-- Tool content -->
+  <script>
+    /* ALL JS inline — no external scripts except CDN imports above */
+    /* Use addEventListener — NEVER inline onclick/onchange handlers */
+  </script>
+</body>
+</html>
+```
+
+### Header Template (use on every tool)
+```html
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <div class="logo-mark">CC</div>
+      <div class="brand-text">
+        <span class="brand-name">Curated Capital</span>
+        <span class="brand-sub">Internal Tools</span>
+      </div>
+    </div>
+    <div class="tool-title">[Tool Name]</div>
+    <div class="header-meta">CA DRE 01900872</div>
+  </div>
+</header>
+```
+
+---
+
+## JAVASCRIPT RULES
+
+1. **NEVER use inline event handlers** — always `addEventListener`
+   ```js
+   // ✅ correct
+   document.getElementById('calcBtn').addEventListener('click', handleCalc);
+
+   // ❌ wrong
+   <button onclick="handleCalc()">
+   ```
+
+2. **Format currency** with helper:
+   ```js
+   const formatCurrency = (n) =>
+     new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
+   ```
+
+3. **Format percentages**:
+   ```js
+   const formatPct = (n, decimals = 2) => `${parseFloat(n).toFixed(decimals)}%`;
+   ```
+
+4. **Validate numeric inputs** before any calculation — show inline error state on the field, not an alert.
+
+5. **DOM manipulation**: prefer `textContent` over `innerHTML` unless rendering HTML intentionally.
+
+6. Use `const` and `let` — never `var`.
+
+7. Group related logic into named functions. No anonymous function soup.
+
+---
+
+## PDF EXPORT (when required)
+
+Use `html2pdf.js` via CDN:
+```html
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+```
+
+**Always use the cloned DOM approach** to avoid mutating the live page:
+```js
+function exportPDF(elementId, filename) {
+  const source = document.getElementById(elementId);
+  const clone = source.cloneNode(true);
+  clone.style.background = '#0B1C3D';
+  clone.style.padding = '24px';
+
+  const opt = {
+    margin:      [10, 10, 10, 10],
+    filename:    filename,
+    image:       { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true, backgroundColor: '#0B1C3D' },
+    jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+
+  html2pdf().set(opt).from(clone).save();
+}
+```
+
+The export button should be styled gold and placed in the tool header or footer. It should NOT appear in the PDF itself (add `class="no-print"` and `@media print { .no-print { display: none; } }`).
+
+---
+
+## CLAUDE API INTEGRATION (when required)
+
+Model: `claude-sonnet-4-20250514`  
+Always include a system prompt tuned to Curated Capital's underwriting criteria.
+
+```js
+async function callClaude(userPrompt, systemPrompt) {
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1500,
+      system: systemPrompt,
+      messages: [{ role: 'user', content: userPrompt }]
+    })
+  });
+  const data = await response.json();
+  return data.content?.[0]?.text ?? '';
+}
+```
+
+Default system prompt skeleton for underwriting tools:
+```
+You are an expert hard money loan underwriter for Curated Capital, a private lender
+in Los Angeles County, Orange County, and San Diego. Evaluate deals against these criteria:
+
+- Fix & Flip: max 75% LTC, $150K–$3M, 12–18 month term
+- Bridge: max 70% LTV, $200K–$5M, 6–24 month term
+- DSCR: max 70% LTV, min 1.1x DSCR, $150K–$3M
+- Ground-Up Construction: max 65% LTC, $300K–$7.5M
+- Cash-Out Refi: max 65% LTV, $150K–$3M
+- 2nd Trust Deed: max 65% CLTV, $100K–$750K
+
+Focus on: LTV/LTC compliance, exit strategy viability, borrower experience,
+property type risk, market conditions in subject property's county.
+Always structure output with clear sections: Risk Assessment, Loan Sizing,
+Conditions, and Recommendation.
+```
+
+Show a loading state (spinner + "Analyzing...") while awaiting the API response.
+Handle errors gracefully — display in a styled error box, never `console.error` only.
+
+---
+
+## 10Y TREASURY YIELD WIDGET
+
+Use this four-source fallback chain in order:
+1. `https://api.fiscaldata.treasury.gov/services/api/v1/accounting/od/avg_interest_rates`
+2. `https://api.stlouisfed.org/fred/series/observations?series_id=DGS10`
+3. Simulated value from recent known range (4.2% – 4.8%)
+4. Static fallback: `4.50%`
+
+Display as: `10Y UST: 4.XX%` in the tool header or rate section.
+
+---
+
+## LOAN PRODUCT QUICK REFERENCE
+
+| Product           | Max LTV/LTC | Min Loan | Max Loan | Typical Term    |
+|-------------------|-------------|----------|----------|-----------------|
+| Fix & Flip        | 75% LTC     | $150K    | $3M      | 12–18 months    |
+| Bridge            | 70% LTV     | $200K    | $5M      | 6–24 months     |
+| DSCR              | 70% LTV     | $150K    | $3M      | 30 yr / 5/1 ARM |
+| Ground-Up Const.  | 65% LTC     | $300K    | $7.5M    | 12–24 months    |
+| Cash-Out Refi     | 65% LTV     | $150K    | $3M      | 12–24 months    |
+| 2nd Trust Deed    | 65% CLTV    | $100K    | $750K    | 12–24 months    |
+
+---
+
+## NETLIFY DEPLOYMENT
+
+- Each tool deploys as its own Netlify site
+- No build step — raw HTML file, deploy via drag-and-drop or Netlify CLI
+- No server-side code, no backend — all logic is client-side
+- Sensitive config (API keys) should be injected at runtime via a modal prompt
+  on first load and stored in `sessionStorage` — never hardcoded
+
+---
+
+## WHAT NOT TO DO
+
+- ❌ No React, Vue, Angular, or any JS framework
+- ❌ No Tailwind, Bootstrap, or external CSS frameworks
+- ❌ No multi-file projects (each tool = one HTML file)
+- ❌ No inline onclick/onchange/onsubmit handlers
+- ❌ No `var` declarations
+- ❌ No `alert()` or `confirm()` for user feedback — use styled UI elements
+- ❌ No hardcoded API keys
+- ❌ No purple gradients, generic SaaS color schemes, or Inter-on-white layouts
+- ❌ No Lorem Ipsum — use realistic hard money lending placeholder data
+
+---
+
+## NAMING CONVENTIONS
+
+- Files: `kebab-case.html` (e.g., `term-sheet-generator.html`, `draw-request-tracker.html`)
+- JS functions: `camelCase` (e.g., `calculateLTV`, `exportPDF`, `renderPipeline`)
+- CSS classes: `kebab-case` (e.g., `.loan-card`, `.status-badge`, `.export-btn`)
+- IDs: `camelCase` (e.g., `loanAmount`, `propertyAddress`, `resultsPanel`)
+
+---
+
+## EXAMPLE PROMPT PATTERNS
+
+When a new tool is requested, always:
+1. Follow the single-file HTML structure above
+2. Apply the full design system (navy/gold, Playfair/Inter)
+3. Include the branded header with `CC` logo mark and `CA DRE 01900872`
+4. Use `addEventListener` for all interactions
+5. Include PDF export if the tool produces a deliverable document
+6. Add the 10Y Treasury widget if the tool involves pricing or rate calculations
+7. Use realistic Curated Capital loan data in any placeholders or defaults
